@@ -15,16 +15,19 @@ import org.springframework.stereotype.Service;
 public class BillingServiceFactory {
 
     @Autowired
+    BillingServiceCostPerHourWithFixedImpl billingServiceCostPerHourWithFixed;
+
+    @Autowired
     BillingServiceCostPerHourImpl billingServiceCostPerHour;
 
-    public BillingService getImplementationForPricing(@NonNull PricingPolicy pricingPolicy) {
+    BillingService getImplementationForPricing(@NonNull PricingPolicy pricingPolicy) {
 
         switch (pricingPolicy) {
             case COST_PER_HOUR:
                 return billingServiceCostPerHour;
             case FIXED_PLUS_COST_PER_HOUR:
             default:
-                return null;
+                return billingServiceCostPerHourWithFixed;
         }
     }
 }

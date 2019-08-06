@@ -40,9 +40,7 @@ public class ParkingLotController {
     @ResponseBody
     public ParkingRecord endParking(@PathVariable Long lotId, @PathVariable Long id) throws Exception {
         LOG.debug("endParking for lotId {}, inputDTO {}", lotId, id);
-
         ParkingRecord parkingRecord = parkingService.end(lotId, id);
-
         LOG.debug("endParking result {}", parkingRecord);
         return parkingRecord;
     }

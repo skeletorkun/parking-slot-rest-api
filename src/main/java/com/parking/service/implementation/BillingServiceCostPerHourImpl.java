@@ -1,18 +1,17 @@
 package com.parking.service.implementation;
 
 
+import com.parking.model.entity.BillingConfig;
+import com.parking.model.entity.ParkingRecord;
 import com.parking.service.BillingService;
 import com.parking.util.ParkingUtils;
 import lombok.NonNull;
-import com.parking.model.entity.BillingConfig;
-import com.parking.model.entity.ParkingRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.parking.model.entity.BillingConfig.PRICE_PER_HOUR;
@@ -34,8 +33,7 @@ public class BillingServiceCostPerHourImpl implements BillingService {
 
         BigDecimal hours = new BigDecimal(duration.toHours());
 
-//        Map<String, String> parameters = config.getParameters();
-        Map<String, String> parameters = new HashMap<>();
+        Map<String, String> parameters = config.getParameters();
         BigDecimal pph = new BigDecimal(parameters.get(PRICE_PER_HOUR));
 
         BigDecimal cost = pph.multiply(hours).setScale(0, BigDecimal.ROUND_DOWN);

@@ -14,16 +14,17 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Map;
 
+import static com.parking.model.entity.BillingConfig.FIXED_FEE;
 import static com.parking.model.entity.BillingConfig.PRICE_PER_HOUR;
 
 /**
  * Implementation of a Billing Service where
- * the customers are charged for each hour spent in the parking (nb hours * hour price)
+ * the customers are charged for each hour spent in the parking (nb hours * hour price) + a fixed fee
  */
 @Service
-public class BillingServiceCostPerHourImpl implements BillingService {
+public class BillingServiceCostPerHourWithFixedImpl implements BillingService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BillingServiceCostPerHourImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BillingServiceCostPerHourWithFixedImpl.class);
 
     @Override
     public BigDecimal calculate(ParkingRecord parkingRecord, @NonNull BillingConfig config) {
@@ -35,8 +36,9 @@ public class BillingServiceCostPerHourImpl implements BillingService {
 
         Map<String, String> parameters = config.getParameters();
         BigDecimal pph = new BigDecimal(parameters.get(PRICE_PER_HOUR));
+        BigDecimal fixedFee = new BigDecimal(parameters.get(FIXED_FEE));
 
-        BigDecimal cost = pph.multiply(hours).setScale(0, BigDecimal.ROUND_DOWN);
+        BigDecimal cost = pph.multiply(hours).setScale(0, BigDecimal.ROUND_DOWN).add(fixedFee);
 
         LOG.debug("Cost is {}", cost);
         return cost;

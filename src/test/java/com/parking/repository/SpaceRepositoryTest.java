@@ -3,36 +3,51 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.parking.service;
+package com.parking.repository;
 
-import com.parking.config.Config;
+import com.parking.model.entity.Space;
+import com.parking.model.enums.VehicleType;
+import com.parking.utils.TestDataSetupService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(classes = Config.class)
-public class ParkingServiceTest {
+public class SpaceRepositoryTest {
 
     @Autowired
-    ParkingService parkingService;
+    SpaceRepository spaceRepository;
+
+    @Autowired
+    TestDataSetupService testDataSetupService;
+
 
     @Before
     public void before() {
+        testDataSetupService.createSimpleLot();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        testDataSetupService.clearRepositories();
     }
 
     @Test
-    public void contextLoads() {
-        Assert.notNull(parkingService);
+    public void testAvailableSpaces() {
+
+
+        List<Space> res = spaceRepository.findByLotIdAndVehicleTypeAndVehiclePlateIsNull(testDataSetupService.getLotId(), VehicleType.ELECTRIC_20W);
+        assertEquals(10, res.size());
     }
 }

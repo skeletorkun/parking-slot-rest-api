@@ -22,36 +22,41 @@ mvn clean package
 ```
 java -jar target/parking-slot-rest-api-2.0.0.RELEASE.jar
 ```
-* Test the server
+* Swagger
 ```
-curl http://127.0.0.1:8080/ping 
+http://localhost:8090/swagger-ui.html#/parking-lot-controller 
 ```
-### Using the Parking Lot Rest Api ###
-#### Configure a Parking Lot ####
-Create a Vubox in FM. For example in dev you can :
-* Connect VPN "GRA"
-* Go to [suiperadmin](http://10.4.102.22/suiperadmin)
-* Choose menu "Read only", then "Manage vms"
-* Click "Select DEV"
-* Click on "Vubox" button for line "F0001"
-* Click "+ Add vubox" on buttom
-* Type Vubox Id
-* Set Status as "Active"
-* Click "Create"
+
+### Using the Rest Api ###
+To be able to use the api, at least one parking has to be configured with space and billing configuration. 
+The api supports creation and ending of a parking 
+
+##### Configure a Parking Lot ####
+There is no api support this but `TestDataSetupService` injects mock data.
+
+* Create a parking `Lot` with `Space`s
+* Create a `BillingConfig` with a `PricingPolicy` and other parameters
+
+##### Create a parking ####
+Use the POST endpoint `/lots/:lotId/parkings` to create a parking record.
+Sample post body:
+
+`{
+  "vehiclePlate": "123-ABC-XY",
+  "vehicleType": "ELECTRIC_20W"
+}`
+
+##### End a parking ####
+Use the POST endpoint `/lots/:lotId/parkings/:parkingId/end` to end a parking. 
+The operation will return the parking that will contain the cost.
 
 
-#### Create a vehicle ####
-Create a vehicle in BO with
-* the right VIN number:
-   * VIN MUST start with "SEG" for segway vehicle
-   * VIN MUST start with "NIU" for niu vehicle
-* "VWGateway" as wake up provider 
-* the created Vubox ID
+### Future work ###
+This first version lacks some features that would be helpful such as further api operations such as:
+* GET all parking records
+* CRUD operations for setting up a Parking `Lot` with `Space`s and a `BillingConfig`
 
-Click "Confirm vubox", then "Save".
-
-
-#### Initialize status ####
-Call the generic gateway to get a status. This status will be sent to FleetManager and the vehicle will be set as "Connected".
-
-`curl -X POST https://frnce-devjava-api.vulog.com/vwgateway/rest/fleets/F0001/vehicles/{vuboxId}/status`# parking-slot-rest-api
+##### Implementing a new Pricing Policy #####
+The customers will be charged using different `BillingService` implementations, based on the`BillingConfig` of a `Lot`.
+To change the pricing of a lot, it suffices to inject a new `BillingConfig` as a dependency. 
+ 
