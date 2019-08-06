@@ -36,7 +36,7 @@ public class ParkingLotController {
     }
 
     @PostMapping("/parkings/{id}/end")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public ParkingRecord endParking(@PathVariable Long lotId, @PathVariable Long id) throws Exception {
         LOG.debug("endParking for lotId {}, inputDTO {}", lotId, id);

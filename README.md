@@ -55,6 +55,8 @@ The operation will return the parking that will contain the cost.
 This first version lacks some features that would be helpful such as further api operations such as:
 * GET all parking records
 * CRUD operations for setting up a Parking `Lot` with `Space`s and a `BillingConfig`
+* `BillingConfig` contains a Map for parameters with free string, this can evolve to something more structured.
+* Test coverage is sub par, it should be increased. 
 
 ##### Implementing a new Pricing Policy #####
 The customers will be charged using different `BillingService` implementations, based on the`BillingConfig` of a `Lot`.
